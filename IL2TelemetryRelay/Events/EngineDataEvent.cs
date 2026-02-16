@@ -14,7 +14,7 @@ public record EngineDataEvent : Event
         Index = BitConverter.ToUInt16(packet, offset);
         // Second index, appears to be same as first
         // ushort index1 = BitConverter.ToUInt16(packet, offset + 2);
-        Offset = new Vector3
+        Offset = new()
         {
             X = BitConverter.ToSingle(packet, offset + 4), // Offset forwards+ backwards-
             Y = BitConverter.ToSingle(packet, offset + 8), // Offset up+ down-

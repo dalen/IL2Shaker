@@ -56,7 +56,7 @@ internal abstract class Effect : ISampleProvider
 
     private void SetDecibelsFromMaster(float db)
     {
-        Volume = new Volume(Audio.MasterVolume, db);
+        Volume = new(Audio.MasterVolume, db);
     }
 
     private protected float GetAmplitude(float db)
@@ -66,7 +66,7 @@ internal abstract class Effect : ISampleProvider
 
     private protected Volume GetVolume(float db)
     {
-        return new Volume(Volume, db);
+        return new(Volume, db);
     }
 
     public int Read(float[] buffer, int offset, int count)

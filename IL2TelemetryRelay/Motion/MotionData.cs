@@ -27,7 +27,7 @@ public record MotionData : Event
         SpinY = BitConverter.ToSingle(packet, offset + 16);
         // Yaw rate (Radians/s)
         SpinZ = BitConverter.ToSingle(packet, offset + 20);
-        // In m/s
+        // In m/s^2
         AccX = BitConverter.ToSingle(packet, offset + 24);
         AccY = BitConverter.ToSingle(packet, offset + 28);
         AccZ = BitConverter.ToSingle(packet, offset + 32);

@@ -29,16 +29,16 @@ internal class Database
 
             if (aircraft.Name == "Default")
             {
-                _defaultEngine = new Vector4(aircraft.EngineHarmonics);
+                _defaultEngine = new(aircraft.EngineHarmonics);
                 var gun = aircraft.Guns[0];
-                _defaultGun = new Gun("Default", gun.RPM, 0, 0);
+                _defaultGun = new("Default", gun.RPM, 0, 0);
                 continue;
             }
 
             if (aircraft.EngineHarmonics == null)
                 _engineHarmonics.Add(aircraft.Name, _defaultEngine);
             else
-                _engineHarmonics.Add(aircraft.Name, new Vector4(aircraft.EngineHarmonics));
+                _engineHarmonics.Add(aircraft.Name, new(aircraft.EngineHarmonics));
 
             if (aircraft.Guns == null)
                 continue;
@@ -132,7 +132,7 @@ internal class Database
                 "{GunID} not found in gun DB - using default settings, RPM will be incorrect",
                 gunID
             );
-        return new Gun("Unknown", _defaultGun.RPM, gunID.Velocity, gunID.Mass);
+        return new("Unknown", _defaultGun.RPM, gunID.Velocity, gunID.Mass);
     }
 
     public Vector4 GetEngineHarmonics(string aircraftName)

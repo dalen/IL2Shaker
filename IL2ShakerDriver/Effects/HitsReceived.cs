@@ -37,7 +37,7 @@ internal class HitsReceived : Effect
 
     protected override void OnEventDataReceived(Event eventData)
     {
-        if (eventData is HitEvent hitEvent)
+        if (eventData is DamageEvent hitEvent)
         {
             Logging
                 .At(this)
@@ -62,8 +62,8 @@ internal class HitsReceived : Effect
             amp1 = Attenuate(freq1, amp1, dist);
             amp2 = Attenuate(freq2, amp2, dist);
 
-            _impulseGenerators.Add(new ImpulseGenerator(freq1, amp1, 3, 2));
-            _impulseGenerators.Add(new ImpulseGenerator(freq2, amp2, 6, 4));
+            _impulseGenerators.Add(new(freq1, amp1, 3, 2));
+            _impulseGenerators.Add(new(freq2, amp2, 6, 4));
         }
     }
 }

@@ -13,7 +13,7 @@ public record GunDataEvent : Event
         : base(tick, packet, offset)
     {
         Index = BitConverter.ToUInt16(packet, offset); // Gun Index
-        Offset = new Vector3
+        Offset = new()
         {
             X = BitConverter.ToSingle(packet, offset + 2), // Offset forwards+ backwards-
             Y = BitConverter.ToSingle(packet, offset + 6), // Offset up+ down-

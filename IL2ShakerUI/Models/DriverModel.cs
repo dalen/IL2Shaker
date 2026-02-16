@@ -24,7 +24,7 @@ internal class DriverModel : IDisposable
         Logging.LevelSwitch.MinimumLevel = Settings.DebugLogging
             ? LogEventLevel.Verbose
             : LogEventLevel.Information;
-        _driver = new Driver();
+        _driver = new();
     }
 
     public void Dispose()

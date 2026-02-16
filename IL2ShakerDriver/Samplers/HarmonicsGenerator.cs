@@ -36,7 +36,7 @@ internal class HarmonicsGenerator : ISampleWriter
                 "Harmonic multiples must be greater than 1"
             );
 
-        _harmonics = new Vector4(1f, harmonic1, harmonic2, harmonic3);
+        _harmonics = new(1f, harmonic1, harmonic2, harmonic3);
     }
 
     public void SetTarget(float fundamentalFreq, Vector4 amplitudes, float transitionTime)

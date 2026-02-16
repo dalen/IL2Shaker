@@ -20,7 +20,7 @@ internal class Flaps : Effect
 
     protected override void OnSettingsUpdated()
     {
-        _actuatingAmplitudes = new Vector4(0, GetAmplitude(-18), GetAmplitude(-9), 0);
+        _actuatingAmplitudes = new(0, GetAmplitude(-18), GetAmplitude(-9), 0);
     }
 
     protected override void Write(float[] buffer, int offset, int count)

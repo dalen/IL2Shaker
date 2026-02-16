@@ -11,7 +11,7 @@ internal class LogViewModel : ViewModelBase
 
     public LogViewModel(LogModel logModel)
     {
-        TextDocument = new TextDocument();
+        TextDocument = new();
         _logModel = logModel;
         logModel.LogUpdated += LogUpdated;
     }

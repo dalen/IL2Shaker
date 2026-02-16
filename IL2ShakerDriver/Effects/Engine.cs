@@ -22,18 +22,16 @@ internal class Engine : Effect
     public Engine(ISampleProvider source, Audio audio)
         : base(source, audio)
     {
-        _engines = new List<HarmonicsGenerator>(4);
+        _engines = new(4);
         for (int i = 0; i < 4; i++)
         {
-            _engines.Add(
-                new HarmonicsGenerator((int)_harmonics[1], (int)_harmonics[2], (int)_harmonics[3])
-            );
+            _engines.Add(new((int)_harmonics[1], (int)_harmonics[2], (int)_harmonics[3]));
         }
     }
 
     protected override void OnSettingsUpdated()
     {
-        _amplitudes = new Vector4(
+        _amplitudes = new(
             GetAmplitude(_harmonicsDB[0]),
             GetAmplitude(_harmonicsDB[1]),
             GetAmplitude(_harmonicsDB[2]),

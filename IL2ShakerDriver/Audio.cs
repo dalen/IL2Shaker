@@ -41,29 +41,26 @@ internal class Audio : ISampleProvider
 
     public Audio(Database database)
     {
-        MasterVolume = new Volume(0);
+        MasterVolume = new(0);
         var waveformat = WaveFormat.CreateIeeeFloatWaveFormat(SimClock.SampleRate, 1);
         Database = database;
 
         _chainStart = new ChainStart(waveformat);
-        _engine = new Engine(_chainStart, this);
-        _landingGear = new LandingGear(_engine, this);
-        _bumps = new Bumps(_landingGear, this);
-        _flaps = new Flaps(_bumps, this);
-        _rollRate = new RollRate(_flaps, this);
-        _gForces = new GForces(_rollRate, this);
-        _stallBuffet = new StallBuffet(_gForces, this);
-        _impacts = new Impacts(_stallBuffet, this);
-        _hitsReceived = new HitsReceived(_impacts, this);
-        _gunFire = new GunFire(_hitsReceived, this);
-        _ordnanceRelease = new OrdnanceRelease(_gunFire, this);
+        _engine = new(_chainStart, this);
+        _landingGear = new(_engine, this);
+        _bumps = new(_landingGear, this);
+        _flaps = new(_bumps, this);
+        _rollRate = new(_flaps, this);
+        _gForces = new(_rollRate, this);
+        _stallBuffet = new(_gForces, this);
+        _impacts = new(_stallBuffet, this);
+        _hitsReceived = new(_impacts, this);
+        _gunFire = new(_hitsReceived, this);
+        _ordnanceRelease = new(_gunFire, this);
 
-        _lowPassFilter = new LowPassFilter(_ordnanceRelease, 80, 2);
-        _highPassFilter = new HighPassFilter(_lowPassFilter, 10, 2);
-        _multiplexing = new MultiplexingSampleProvider(
-            new[] { new ZeroingSampler(_highPassFilter) },
-            OutputChannelCount
-        );
+        _lowPassFilter = new(_ordnanceRelease, 80, 2);
+        _highPassFilter = new(_lowPassFilter, 10, 2);
+        _multiplexing = new(new[] { new ZeroingSampler(_highPassFilter) }, OutputChannelCount);
         for (int i = 0; i < OutputChannelCount; i++)
         {
             _multiplexing.ConnectInputToOutput(0, i);
@@ -124,7 +121,7 @@ internal class Audio : ISampleProvider
         float previousdB = MasterVolume.dB;
 
         Enabled = settings.MasterVolume.Enabled;
-        MasterVolume = new Volume(settings.MasterVolume.Value);
+        MasterVolume = new(settings.MasterVolume.Value);
 
         if (switchedState || previousdB != MasterVolume.dB)
             Logging

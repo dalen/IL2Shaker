@@ -87,7 +87,7 @@ internal static class StateDecoder
                     break;
                 case StateType.Acceleration:
                     // Longitudinal, Vertical, Lateral
-                    state.Acceleration = new Vector3(
+                    state.Acceleration = new(
                         BitConverter.ToSingle(packet, offset),
                         BitConverter.ToSingle(packet, offset + 4),
                         BitConverter.ToSingle(packet, offset + 8)

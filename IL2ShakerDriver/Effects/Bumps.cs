@@ -77,7 +77,7 @@ internal class Bumps : Effect
 
                 amp1 = Attenuate(freq1, amp1, _distance[i]);
 
-                _impulseGenerators.Add(new ImpulseGenerator(freq1, amp1, 5, 3));
+                _impulseGenerators.Add(new(freq1, amp1, 5, 3));
 
                 _ticksRising[i] = 0;
                 _startPressure[i] = 0;

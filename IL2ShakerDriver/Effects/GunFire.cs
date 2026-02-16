@@ -38,7 +38,7 @@ internal class GunFire : Effect
     public GunFire(ISampleProvider source, Audio audio)
         : base(source, audio)
     {
-        _gunRPMCalculator = new GunRPMCalculator(_guns);
+        _gunRPMCalculator = new(_guns);
     }
 
     protected override void Write(float[] buffer, int offset, int count)
@@ -93,7 +93,7 @@ internal class GunFire : Effect
             if (state.LastPlayed.Tick == 0)
             {
                 // If this gun hasn't played an effect yet, queue it up in the future from when it was last fired
-                playAt = new SimTime(state.LastFired.AbsoluteTime);
+                playAt = new(state.LastFired.AbsoluteTime);
             }
             else if (
                 (int)((stateData.Tick - state.LastPlayed.Tick) * SimClock.SamplesPerTick)
@@ -103,7 +103,7 @@ internal class GunFire : Effect
             {
                 // If this gun has played an effect already and it's time to queue another effect up, add it in the
                 // future from when it was last played
-                playAt = new SimTime(state.LastPlayed.AbsoluteTime + gun.SamplesBetweenShots);
+                playAt = new(state.LastPlayed.AbsoluteTime + gun.SamplesBetweenShots);
             }
             else
                 continue;
@@ -151,7 +151,7 @@ internal class GunFire : Effect
             state.LastPlayed = playAt;
 
             // Add the impulse generator for the aggregated guns
-            _impulseGenerators.Add(new TimedImpulseGenerator(playAt, freq, ampWeighted, 3, 3));
+            _impulseGenerators.Add(new(playAt, freq, ampWeighted, 3, 3));
         }
 
         // Reset the aggregated array
@@ -191,13 +191,13 @@ internal class GunFire : Effect
                 while (_guns.Count < gunData.Index + 1)
                 {
                     _guns.Add(default!);
-                    _gunStates.Add(new GunState());
+                    _gunStates.Add(new());
                     _distances.Add(default);
                     _aggregated.Add(false);
                 }
 
                 var gun = Audio.Database.GetGun(
-                    new GunID(_aircraftName, gunData.Index, gunData.Velocity, gunData.Mass)
+                    new(_aircraftName, gunData.Index, gunData.Velocity, gunData.Mass)
                 );
                 if (gun.Name != "Unknown" && _guns[gunData.Index] != gun)
                     Logging.At(this).Debug("Gun {Idx}: {Gun}", gunData.Index, gun);
@@ -210,7 +210,7 @@ internal class GunFire : Effect
                 _gunStates[gunFired.Index].Firing = true;
                 if (Log.IsEnabled(LogEventLevel.Debug))
                     _gunRPMCalculator.UpdateFireRate(gunFired.Tick, gunFired.Index);
-                _gunStates[gunFired.Index].LastFired = new SimTime(gunFired.Tick, 0);
+                _gunStates[gunFired.Index].LastFired = new(gunFired.Tick, 0);
 
                 break;
         }

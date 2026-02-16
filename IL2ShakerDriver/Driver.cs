@@ -16,8 +16,8 @@ public class Driver : IDisposable
 
     public Driver()
     {
-        _db = new Database();
-        _audio = new Audio(_db);
+        _db = new();
+        _audio = new(_db);
     }
 
     public async void Dispose()
@@ -48,13 +48,13 @@ public class Driver : IDisposable
         if (_listenerTask != null)
             throw new InvalidOperationException("Listener already running");
         // TODO Need to know if this fails
-        _listenerToken = new CancellationTokenSource();
+        _listenerToken = new();
         _listenerTask = Task.Run(() => Listener.ListenToStream(_listenerToken.Token));
     }
 
     private void Start(string? deviceName, int latency)
     {
-        _audioToken = new CancellationTokenSource();
+        _audioToken = new();
         // TODO Need to know if this fails
         _audioTask = Task.Run(() => _audio.Start(deviceName, latency, _audioToken.Token));
     }

@@ -11,7 +11,7 @@ public record RocketLaunchEvent : Event
     public RocketLaunchEvent(uint tick, byte[] packet, int offset)
         : base(tick, packet, offset)
     {
-        Offset = new Vector3
+        Offset = new()
         {
             X = BitConverter.ToSingle(packet, offset),
             Y = BitConverter.ToSingle(packet, offset + 4),

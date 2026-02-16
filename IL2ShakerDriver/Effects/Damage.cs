@@ -22,7 +22,7 @@ internal class Damage : Effect
 
     protected override void OnEventDataReceived(Event eventData)
     {
-        if (eventData is DamageEvent damagedEvent)
+        if (eventData is ExplosionEvent damagedEvent)
         {
             if (_damageTick != 0 && damagedEvent.Tick != _damageTick)
                 Logging.At(this).Debug("Never cleared previous damage");

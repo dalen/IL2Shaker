@@ -32,15 +32,15 @@ internal class LandingGear : Effect
     public LandingGear(ISampleProvider source, Audio audio)
         : base(source, audio)
     {
-        _harmonicsGenerators.Add(new HarmonicsGenerator(2, 3, 4));
-        _harmonicsGenerators.Add(new HarmonicsGenerator(2, 3, 4));
-        _harmonicsGenerators.Add(new HarmonicsGenerator(2, 3, 4));
-        _harmonicsGenerators.Add(new HarmonicsGenerator(2, 3, 4));
+        _harmonicsGenerators.Add(new(2, 3, 4));
+        _harmonicsGenerators.Add(new(2, 3, 4));
+        _harmonicsGenerators.Add(new(2, 3, 4));
+        _harmonicsGenerators.Add(new(2, 3, 4));
     }
 
     protected override void OnSettingsUpdated()
     {
-        _actuatingAmplitudes = new Vector4(GetAmplitude(-12), GetAmplitude(-18), 0, 0);
+        _actuatingAmplitudes = new(GetAmplitude(-12), GetAmplitude(-18), 0, 0);
         _retractedVolume = GetVolume(0);
         _extendedVolume = GetVolume(-5);
         _beginActuatingVolume = GetVolume(-6);
@@ -106,8 +106,8 @@ internal class LandingGear : Effect
                     Logging.At(this).Debug("Landing gear {Index} fully retracted", i);
                     // Play fully retracted sound
                     float amp = Attenuate(RetractedFreq, _retractedVolume.Amplitude, _distance[i]);
-                    _impulseGenerators.Add(new ImpulseGenerator(RetractedFreq, amp, 7, 5));
-                    _impulseGenerators.Add(new ImpulseGenerator(RetractedFreq, amp, 7, 5, 0.2f));
+                    _impulseGenerators.Add(new(RetractedFreq, amp, 7, 5));
+                    _impulseGenerators.Add(new(RetractedFreq, amp, 7, 5, 0.2f));
                 }
                 else if (position == 1)
                 {
@@ -119,10 +119,8 @@ internal class LandingGear : Effect
                         _extendedVolume.Amplitude,
                         _distance[i]
                     );
-                    _impulseGenerators.Add(new ImpulseGenerator(ExtendedFreq, amp0, 5, 3));
-                    _impulseGenerators.Add(
-                        new ImpulseGenerator(ExtendedFreq * 1.5f, amp1, 7, 3, 0.15f)
-                    );
+                    _impulseGenerators.Add(new(ExtendedFreq, amp0, 5, 3));
+                    _impulseGenerators.Add(new(ExtendedFreq * 1.5f, amp1, 7, 3, 0.15f));
                 }
             }
             else if (actuating && !wasActuating)
@@ -136,10 +134,8 @@ internal class LandingGear : Effect
                         _beginActuatingVolume.Amplitude,
                         _distance[i]
                     );
-                    _impulseGenerators.Add(new ImpulseGenerator(BeginActuatingFreq, amp, 8, 6));
-                    _impulseGenerators.Add(
-                        new ImpulseGenerator(BeginActuatingFreq, amp, 8, 6, 0.1f)
-                    );
+                    _impulseGenerators.Add(new(BeginActuatingFreq, amp, 8, 6));
+                    _impulseGenerators.Add(new(BeginActuatingFreq, amp, 8, 6, 0.1f));
                 }
 
                 // Start the generator

@@ -37,30 +37,30 @@ internal class EventsDecoder
                     Logging.At(this).Debug("{evt}", rocketLaunchEvent);
                     yield return rocketLaunchEvent;
                     break;
-                case EventType.Event6:
-                    var event6 = new Event6(tick, packet, offset);
+                case EventType.Hit:
+                    var event6 = new HitEvent(tick, packet, offset);
                     Logging.At(this).Debug("{evt}", event6);
                     yield return event6;
                     break;
-                case EventType.Hit:
-                    var hitEvent = new HitEvent(tick, packet, offset);
+                case EventType.Damage:
+                    var hitEvent = new DamageEvent(tick, packet, offset);
                     // LogLib.At(this).Debug("{evt}", hitEvent);
                     yield return hitEvent;
                     break;
-                case EventType.Damage:
-                    var damagedEvent = new DamageEvent(tick, packet, offset);
+                case EventType.Explosion:
+                    var damagedEvent = new ExplosionEvent(tick, packet, offset);
                     // LogLib.At(this).Debug("{evt}", damagedEvent);
                     yield return damagedEvent;
                     break;
                 case EventType.GunFired:
                     yield return new GunFiredEvent(tick, packet, offset);
                     break;
-                case EventType.Event13:
+                case EventType.ClientData:
                     // Contains player name and bunch of other stuff? Happens only on mission start
                     Logging.At(this).Debug("Event 13");
                     break;
-                case EventType.CurrentSeat:
-                    var currentSeat = new CurrentSeat(tick, packet, offset);
+                case EventType.ControlledObjectData:
+                    var currentSeat = new ControlledObjectData(tick, packet, offset);
                     // LogLib.At(this).Debug("{evt}", currentSeat);
                     yield return currentSeat;
                     break;

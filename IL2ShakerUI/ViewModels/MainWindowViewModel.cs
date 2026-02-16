@@ -15,7 +15,7 @@ internal class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-        LogViewModel = new LogViewModel(new LogModel());
-        SettingsViewModel = new SettingsViewModel(new DriverModel());
+        LogViewModel = new(new());
+        SettingsViewModel = new(new());
     }
 }

@@ -82,14 +82,14 @@ internal class SimClock
 
     private static SimTime GetLatencyOffsetSimTime(uint tick, int latency)
     {
-        return new SimTime(
+        return new(
             (long)tick * SamplesPerTick - (long)(latency * 0.001f * SampleRate) - SamplesPerTick
         );
     }
 
     public void Increment(int samples)
     {
-        Time = new SimTime(Time.AbsoluteTime + samples);
+        Time = new(Time.AbsoluteTime + samples);
     }
 
     private Vector2 _tickDiffs;

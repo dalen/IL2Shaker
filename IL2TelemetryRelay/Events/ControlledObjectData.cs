@@ -1,11 +1,11 @@
 ﻿namespace IL2TelemetryRelay.Events;
 
-public record CurrentSeat : Event
+public record ControlledObjectData : Event
 {
     public readonly uint Seat;
     public readonly ushort Ushort0;
 
-    public CurrentSeat(uint tick, byte[] packet, int offset)
+    public ControlledObjectData(uint tick, byte[] packet, int offset)
         : base(tick, packet, offset)
     {
         // Triggers on seat change

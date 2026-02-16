@@ -19,8 +19,8 @@ public static class Relay
         IPEndPoint? ipEndPoint = null;
         try
         {
-            ipEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-            client = new UdpClient(ipEndPoint);
+            ipEndPoint = new(IPAddress.Parse(ipAddress), port);
+            client = new(ipEndPoint);
         }
         catch (SocketException ex)
         {
