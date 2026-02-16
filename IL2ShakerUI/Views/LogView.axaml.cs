@@ -14,9 +14,9 @@ public partial class LogView : UserControl
     {
         InitializeComponent();
 
-        _textEditor                           =  this.FindControl<TextEditor>("TextEditor");
-        _textEditor.TextArea.Caret.CaretBrush =  Brushes.Transparent;
-        _textEditor.TextChanged               += (o, _) => ((TextEditor)o!).ScrollToEnd();
+        _textEditor = this.FindControl<TextEditor>("TextEditor");
+        _textEditor.TextArea.Caret.CaretBrush = Brushes.Transparent;
+        _textEditor.TextChanged += (o, _) => ((TextEditor)o!).ScrollToEnd();
     }
 
     private void InitializeComponent()

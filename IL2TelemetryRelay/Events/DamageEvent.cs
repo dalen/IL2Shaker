@@ -5,9 +5,10 @@ namespace IL2TelemetryRelay.Events;
 public record DamageEvent : Event
 {
     public readonly Vector3 Offset;
-    public readonly float   Float0;
+    public readonly float Float0;
 
-    public DamageEvent(uint tick, byte[] packet, int offset) : base(tick, packet, offset)
+    public DamageEvent(uint tick, byte[] packet, int offset)
+        : base(tick, packet, offset)
     {
         // This event is spammed on being hit, perhaps a damaging hit?
         // Offset lines up very closely with a received HitEvent from the previous tick
@@ -17,7 +18,7 @@ public record DamageEvent : Event
         {
             X = BitConverter.ToSingle(packet, offset),
             Y = BitConverter.ToSingle(packet, offset + 4),
-            Z = BitConverter.ToSingle(packet, offset + 8)
+            Z = BitConverter.ToSingle(packet, offset + 8),
         };
         // Seems to depend on what hit by 2.8f, 3.8f for small cal guns, 59.6 for running into the ground
         // Might not be a float but sure looks like the bits in front are the sign/exponent

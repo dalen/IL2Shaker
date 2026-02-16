@@ -5,20 +5,22 @@ namespace IL2ShakerDriver.DB;
 
 internal class Database
 {
-    private readonly Dictionary<GunID, Gun>      _guns            = new();
+    private readonly Dictionary<GunID, Gun> _guns = new();
     private readonly Dictionary<string, Vector4> _engineHarmonics = new();
-    private          Gun                         _defaultGun;
-    private          Vector4                     _defaultEngine;
+    private Gun _defaultGun;
+    private Vector4 _defaultEngine;
 
     public void LoadFiles()
     {
         Logging.At(this).Information("Loading aircraft data...");
 
-        using TextReader reader = new StreamReader(Directory.GetCurrentDirectory() + @"\Planes.yaml");
+        using TextReader reader = new StreamReader(
+            Directory.GetCurrentDirectory() + @"\Planes.yaml"
+        );
 
         var aircrafts = new Deserializer().Deserialize<List<Aircraft>>(reader);
 
-        float biggestGun  = 0;
+        float biggestGun = 0;
         float smallestGun = float.MaxValue;
 
         foreach (var aircraft in aircrafts)
@@ -47,9 +49,12 @@ internal class Database
 
                     if (gun.Mass.Length != gun.Velocity.Length || gun.Mass.Length == 0)
                     {
-                        Logging.At(this)
-                           .Warning("{Name} - Invalid data - there must be at least one of both mass and velocity and the counts must match",
-                                    aircraft.Name);
+                        Logging
+                            .At(this)
+                            .Warning(
+                                "{Name} - Invalid data - there must be at least one of both mass and velocity and the counts must match",
+                                aircraft.Name
+                            );
                         continue;
                     }
 
@@ -58,32 +63,47 @@ internal class Database
                         int index = gun.Indexes[j];
                         if (index < 0)
                         {
-                            Logging.At(this).Warning("{Name} - Invalid index ({Index}) - indexes must be >= 0",
-                                                     aircraft.Name, index);
+                            Logging
+                                .At(this)
+                                .Warning(
+                                    "{Name} - Invalid index ({Index}) - indexes must be >= 0",
+                                    aircraft.Name,
+                                    index
+                                );
                             break;
                         }
 
                         for (int k = 0; k < gun.Mass.Length; k++)
                         {
                             float velocity = gun.Velocity[k];
-                            float mass     = gun.Mass[k];
+                            float mass = gun.Mass[k];
                             if (velocity is <= 0 or > 3000)
                             {
-                                Logging.At(this)
-                                   .Warning("{Name}:{GunName} - Invalid velocity ({Velocity}) - must be > 0 and < 3000",
-                                            aircraft.Name, gun.Name, velocity);
+                                Logging
+                                    .At(this)
+                                    .Warning(
+                                        "{Name}:{GunName} - Invalid velocity ({Velocity}) - must be > 0 and < 3000",
+                                        aircraft.Name,
+                                        gun.Name,
+                                        velocity
+                                    );
                                 continue;
                             }
 
                             if (mass is <= 0 or > 10)
                             {
-                                Logging.At(this)
-                                   .Warning("{Name}:{GunName} - Invalid mass ({Mass}) - must be > 0 and < 10",
-                                            aircraft.Name, gun.Name, mass);
+                                Logging
+                                    .At(this)
+                                    .Warning(
+                                        "{Name}:{GunName} - Invalid mass ({Mass}) - must be > 0 and < 10",
+                                        aircraft.Name,
+                                        gun.Name,
+                                        mass
+                                    );
                                 continue;
                             }
 
-                            var gunID  = new GunID(aircraft.Name, index, velocity, mass);
+                            var gunID = new GunID(aircraft.Name, index, velocity, mass);
                             var newGun = new Gun(gun.Name, gun.RPM, velocity, mass);
 
                             if (newGun.KineticEnergy > biggestGun)
@@ -106,7 +126,12 @@ internal class Database
     {
         if (_guns.TryGetValue(gunID, out var gun))
             return gun;
-        Logging.At(this).Warning("{GunID} not found in gun DB - using default settings, RPM will be incorrect", gunID);
+        Logging
+            .At(this)
+            .Warning(
+                "{GunID} not found in gun DB - using default settings, RPM will be incorrect",
+                gunID
+            );
         return new Gun("Unknown", _defaultGun.RPM, gunID.Velocity, gunID.Mass);
     }
 
@@ -114,7 +139,9 @@ internal class Database
     {
         if (_engineHarmonics.TryGetValue(aircraftName, out var harmonics))
             return harmonics;
-        Logging.At(this).Warning("{Name} not found in engine DB - using default engine", aircraftName);
+        Logging
+            .At(this)
+            .Warning("{Name} not found in engine DB - using default engine", aircraftName);
         return _defaultEngine;
     }
 }

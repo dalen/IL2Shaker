@@ -7,48 +7,52 @@ namespace IL2ShakerDriver.Effects;
 
 internal abstract class Effect : ISampleProvider
 {
-    public bool       Enabled    { get; set; }
-    public Volume     Volume     { get; private set; }
+    public bool Enabled { get; set; }
+    public Volume Volume { get; private set; }
     public WaveFormat WaveFormat { get; }
 
     protected readonly ISampleProvider Source;
-    protected readonly Audio           Audio;
-    protected readonly object          Lock = new();
+    protected readonly Audio Audio;
+    protected readonly object Lock = new();
 
     protected Effect(ISampleProvider source, Audio audio)
     {
         WaveFormat = source.WaveFormat;
-        Audio      = audio;
-        Source     = source;
+        Audio = audio;
+        Source = source;
 
-        Listener.EventDataReceived  += EventDataReceived;
+        Listener.EventDataReceived += EventDataReceived;
         Listener.MotionDataReceived += MotionDataReceived;
-        Listener.StateDataReceived  += StateDataReceived;
+        Listener.StateDataReceived += StateDataReceived;
     }
 
     public void UpdateSettings(IEffectSettings settings)
     {
         lock (Lock)
         {
-            bool  switchedState = settings.Enabled != Enabled;
-            float previousdB    = Volume.dB;
+            bool switchedState = settings.Enabled != Enabled;
+            float previousdB = Volume.dB;
 
             Enabled = settings.Enabled;
             SetDecibelsFromMaster(settings.Value);
 
             if (switchedState || previousdB != Volume.dB)
             {
-                Logging.At(this).Verbose("{State}: {Rel}dB relative ({Vol}dB)", Enabled ? "Enabled" : "Disabled",
-                                         settings.Value, Volume.dB);
+                Logging
+                    .At(this)
+                    .Verbose(
+                        "{State}: {Rel}dB relative ({Vol}dB)",
+                        Enabled ? "Enabled" : "Disabled",
+                        settings.Value,
+                        Volume.dB
+                    );
             }
 
             OnSettingsUpdated();
         }
     }
 
-    protected virtual void OnSettingsUpdated()
-    {
-    }
+    protected virtual void OnSettingsUpdated() { }
 
     private void SetDecibelsFromMaster(float db)
     {
@@ -90,9 +94,7 @@ internal abstract class Effect : ISampleProvider
         }
     }
 
-    protected virtual void OnEventDataReceived(Event eventData)
-    {
-    }
+    protected virtual void OnEventDataReceived(Event eventData) { }
 
     private void MotionDataReceived(MotionData motionData)
     {
@@ -102,9 +104,7 @@ internal abstract class Effect : ISampleProvider
         }
     }
 
-    protected virtual void OnMotionDataReceived(MotionData motionData)
-    {
-    }
+    protected virtual void OnMotionDataReceived(MotionData motionData) { }
 
     private void StateDataReceived(StateData stateData)
     {
@@ -114,22 +114,21 @@ internal abstract class Effect : ISampleProvider
         }
     }
 
-    protected virtual void OnStateDataReceived(StateData stateData)
-    {
-    }
+    protected virtual void OnStateDataReceived(StateData stateData) { }
 
     // Attenuation is in decibels/m
-    private const float AttenLow     = 0.05f;
-    private const float AttenHigh    = 0.3f;
+    private const float AttenLow = 0.05f;
+    private const float AttenHigh = 0.3f;
     private const float AttenStartHz = 10f;
-    private const float AttenEndHz   = 120f;
+    private const float AttenEndHz = 120f;
 
     protected static float Attenuate(float freq, float amp, float distance)
     {
         float clampedFreq = Math.Max(Math.Min(freq, AttenEndHz), AttenStartHz) - AttenStartHz;
-        float coefficient = AttenLow + (AttenHigh - AttenLow) * (clampedFreq / (AttenEndHz - AttenStartHz));
+        float coefficient =
+            AttenLow + (AttenHigh - AttenLow) * (clampedFreq / (AttenEndHz - AttenStartHz));
         float attenuation = MathF.Exp(-coefficient * distance);
-        float amplitude   = attenuation * amp;
+        float amplitude = attenuation * amp;
         return amplitude;
     }
 }

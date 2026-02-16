@@ -4,11 +4,11 @@ namespace IL2TelemetryRelay.State;
 
 public record StateData : Event
 {
-    public int     EngineCount;
+    public int EngineCount;
     public Vector4 RPM;
     public Vector4 IntakeManifoldPressurePa;
 
-    public int     LandingGearCount;
+    public int LandingGearCount;
     public Vector4 LandingGearPosition;
     public Vector4 LandingGearPressure;
 
@@ -26,12 +26,11 @@ public record StateData : Event
     public float AirBrakePosition;
 
     public Vector4 Val2;
-    public float   Val3;
-    public float   Val7;
+    public float Val3;
+    public float Val7;
 
     public bool Paused;
 
-    public StateData(uint tick, byte[] packet, int offset) : base(tick, packet, offset)
-    {
-    }
+    public StateData(uint tick, byte[] packet, int offset)
+        : base(tick, packet, offset) { }
 }

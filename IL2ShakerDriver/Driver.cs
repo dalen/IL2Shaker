@@ -5,18 +5,18 @@ namespace IL2ShakerDriver;
 public class Driver : IDisposable
 {
     private readonly Database _db;
-    private readonly Audio    _audio;
+    private readonly Audio _audio;
 
     private CancellationTokenSource? _listenerToken;
-    private Task?                    _listenerTask;
+    private Task? _listenerTask;
 
     private CancellationTokenSource? _audioToken;
-    private Task?                    _audioTask;
-    private int                      _currentLatency;
+    private Task? _audioTask;
+    private int _currentLatency;
 
     public Driver()
     {
-        _db    = new Database();
+        _db = new Database();
         _audio = new Audio(_db);
     }
 
@@ -49,7 +49,7 @@ public class Driver : IDisposable
             throw new InvalidOperationException("Listener already running");
         // TODO Need to know if this fails
         _listenerToken = new CancellationTokenSource();
-        _listenerTask  = Task.Run(() => Listener.ListenToStream(_listenerToken.Token));
+        _listenerTask = Task.Run(() => Listener.ListenToStream(_listenerToken.Token));
     }
 
     private void Start(string? deviceName, int latency)
@@ -69,9 +69,11 @@ public class Driver : IDisposable
     public async void UpdateSettings(ISettings settings)
     {
         _audio.UpdateSettings(settings);
-        if (_audio.OutputDevice              == null
-         || _audio.OutputDevice.FriendlyName != settings.OutputDevice
-         || _currentLatency                  != settings.Latency)
+        if (
+            _audio.OutputDevice == null
+            || _audio.OutputDevice.FriendlyName != settings.OutputDevice
+            || _currentLatency != settings.Latency
+        )
         {
             await Task.Run(Stop);
             _currentLatency = settings.Latency;

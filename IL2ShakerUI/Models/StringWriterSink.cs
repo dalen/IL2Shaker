@@ -9,16 +9,16 @@ namespace IL2ShakerUI.Models;
 
 internal class StringWriterSink : ILogEventSink
 {
-    private readonly LogModel       _logModel;
-    private readonly StringWriter   _writer = new();
-    private readonly StringBuilder  _builder;
+    private readonly LogModel _logModel;
+    private readonly StringWriter _writer = new();
+    private readonly StringBuilder _builder;
     private readonly ITextFormatter _formatter;
 
     public StringWriterSink(LogModel logModel, ITextFormatter formatter)
     {
-        _logModel  = logModel;
+        _logModel = logModel;
         _formatter = formatter;
-        _builder   = _writer.GetStringBuilder();
+        _builder = _writer.GetStringBuilder();
     }
 
     public void Emit(LogEvent logEvent)

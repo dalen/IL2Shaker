@@ -12,11 +12,11 @@ namespace IL2ShakerDriver.Effects;
 internal class GunFire : Effect
 {
     private readonly List<TimedImpulseGenerator> _impulseGenerators = new();
-    private readonly List<GunState>              _gunStates         = new();
-    private readonly List<Gun>                   _guns              = new();
-    private readonly List<bool>                  _aggregated        = new();
-    private readonly List<float>                 _distances         = new();
-    private readonly GunRPMCalculator            _gunRPMCalculator;
+    private readonly List<GunState> _gunStates = new();
+    private readonly List<Gun> _guns = new();
+    private readonly List<bool> _aggregated = new();
+    private readonly List<float> _distances = new();
+    private readonly GunRPMCalculator _gunRPMCalculator;
 
     private string _aircraftName = string.Empty;
 
@@ -28,15 +28,15 @@ internal class GunFire : Effect
     private const float FreqMin = 35f;
     private const float FreqMax = 80f;
 
-
     private class GunState
     {
-        public bool    Firing;
+        public bool Firing;
         public SimTime LastFired;
         public SimTime LastPlayed;
     }
 
-    public GunFire(ISampleProvider source, Audio audio) : base(source, audio)
+    public GunFire(ISampleProvider source, Audio audio)
+        : base(source, audio)
     {
         _gunRPMCalculator = new GunRPMCalculator(_guns);
     }
@@ -69,20 +69,20 @@ internal class GunFire : Effect
 
             var gun = _guns[i];
 
-            float expectedUpdateRate  = 50f / (gun.RPM / 60f);
-            int   maxDiffBetweenShots = (int)Math.Ceiling(expectedUpdateRate);
+            float expectedUpdateRate = 50f / (gun.RPM / 60f);
+            int maxDiffBetweenShots = (int)Math.Ceiling(expectedUpdateRate);
 
             if ((int)(stateData.Tick - state.LastFired.Tick) <= maxDiffBetweenShots)
                 continue;
 
             // If too much time has passed since we've received a packet saying this gun is firing, turn it off
-            state.Firing     = false;
+            state.Firing = false;
             state.LastPlayed = default;
         }
 
         for (int i = 0; i < _gunStates.Count; i++)
         {
-            var gun   = _guns[i];
+            var gun = _guns[i];
             var state = _gunStates[i];
 
             // Skip any guns that aren't firing or have been aggregated already
@@ -95,9 +95,11 @@ internal class GunFire : Effect
                 // If this gun hasn't played an effect yet, queue it up in the future from when it was last fired
                 playAt = new SimTime(state.LastFired.AbsoluteTime);
             }
-            else if ((int)((stateData.Tick - state.LastPlayed.Tick) * SimClock.SamplesPerTick)
-                   - (int)state.LastPlayed.SubTick
-                   > gun.SamplesBetweenShots)
+            else if (
+                (int)((stateData.Tick - state.LastPlayed.Tick) * SimClock.SamplesPerTick)
+                    - (int)state.LastPlayed.SubTick
+                > gun.SamplesBetweenShots
+            )
             {
                 // If this gun has played an effect already and it's time to queue another effect up, add it in the
                 // future from when it was last played
@@ -107,8 +109,10 @@ internal class GunFire : Effect
                 continue;
 
             // Calculate the frequencies and amplitudes for this gun based on its kinetic energy
-            float keRatio  = (gun.RtKineticEnergy - MinRtKineticEnergy) / (MaxRtKineticEnergy - MinRtKineticEnergy);
-            float freq     = FreqMin + (1 - keRatio) * (FreqMax - FreqMin);
+            float keRatio =
+                (gun.RtKineticEnergy - MinRtKineticEnergy)
+                / (MaxRtKineticEnergy - MinRtKineticEnergy);
+            float freq = FreqMin + (1 - keRatio) * (FreqMax - FreqMin);
             float ampTotal = CalculateAmplitude(gun.RtKineticEnergy, freq, _distances[i]);
 
             // Search for any other identical guns that are also firing at the same time and aggregate them
@@ -116,11 +120,13 @@ internal class GunFire : Effect
             for (int j = i + 1; j < _gunStates.Count; j++)
             {
                 var otherState = _gunStates[j];
-                if (_aggregated[j]
-                 || !state.Firing
-                 || gun                           != _guns[j]
-                 || state.LastFired.AbsoluteTime  != otherState.LastFired.AbsoluteTime
-                 || state.LastPlayed.AbsoluteTime != otherState.LastPlayed.AbsoluteTime)
+                if (
+                    _aggregated[j]
+                    || !state.Firing
+                    || gun != _guns[j]
+                    || state.LastFired.AbsoluteTime != otherState.LastFired.AbsoluteTime
+                    || state.LastPlayed.AbsoluteTime != otherState.LastPlayed.AbsoluteTime
+                )
                     continue;
 
                 // Mark this gun as aggregated, increase count, and set LastPlayed
@@ -139,11 +145,11 @@ internal class GunFire : Effect
             // 3 guns - 1.31x
             // ...
             // 8 guns - 1.68x
-            float divisor     = MathF.Pow(aggregatedCount, 6 / 8f);
+            float divisor = MathF.Pow(aggregatedCount, 6 / 8f);
             float ampWeighted = ampTotal / divisor;
-            
+
             state.LastPlayed = playAt;
-            
+
             // Add the impulse generator for the aggregated guns
             _impulseGenerators.Add(new TimedImpulseGenerator(playAt, freq, ampWeighted, 3, 3));
         }
@@ -190,11 +196,12 @@ internal class GunFire : Effect
                     _aggregated.Add(false);
                 }
 
-                var gun = Audio.Database.GetGun(new GunID(_aircraftName, gunData.Index, gunData.Velocity,
-                                                          gunData.Mass));
+                var gun = Audio.Database.GetGun(
+                    new GunID(_aircraftName, gunData.Index, gunData.Velocity, gunData.Mass)
+                );
                 if (gun.Name != "Unknown" && _guns[gunData.Index] != gun)
                     Logging.At(this).Debug("Gun {Idx}: {Gun}", gunData.Index, gun);
-                _guns[gunData.Index]      = gun;
+                _guns[gunData.Index] = gun;
                 _distances[gunData.Index] = gunData.Offset.Length();
                 break;
             case GunFiredEvent gunFired:

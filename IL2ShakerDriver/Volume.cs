@@ -9,13 +9,13 @@ internal struct Volume
 
     public Volume(float dB)
     {
-        this.dB   = dB;
+        this.dB = dB;
         Amplitude = (float)Decibels.DecibelsToLinear(dB);
     }
 
     public Volume(Volume reference, float dB)
     {
-        this.dB   = reference.dB + dB;
+        this.dB = reference.dB + dB;
         Amplitude = (float)Decibels.DecibelsToLinear(this.dB);
     }
 }

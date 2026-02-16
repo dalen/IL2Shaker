@@ -9,7 +9,7 @@ internal class EventsDecoder
         byte eventLength = packet[offset++];
         for (int i = 0; i < eventLength; i++)
         {
-            var  eventType  = (EventType)BitConverter.ToUInt16(packet, offset);
+            var eventType = (EventType)BitConverter.ToUInt16(packet, offset);
             byte eventBytes = packet[offset + 2];
             offset += 3;
 

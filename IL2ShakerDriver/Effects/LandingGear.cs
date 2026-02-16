@@ -9,27 +9,28 @@ namespace IL2ShakerDriver.Effects;
 
 internal class LandingGear : Effect
 {
-    private readonly List<ImpulseGenerator>   _impulseGenerators   = new();
+    private readonly List<ImpulseGenerator> _impulseGenerators = new();
     private readonly List<HarmonicsGenerator> _harmonicsGenerators = new();
-    private readonly float[]                  _previousPosition    = new float[4];
-    private readonly bool[]                   _actuating           = new bool[4];
-    private readonly Vector4                  _harmonics           = new(1, 2, 3, 4);
+    private readonly float[] _previousPosition = new float[4];
+    private readonly bool[] _actuating = new bool[4];
+    private readonly Vector4 _harmonics = new(1, 2, 3, 4);
 
     private const float MinChangeForActuation = 0.0001f;
     private const float MaxChangeForActuation = 0.25f;
-    
-    private const float ActuatingBaseFreq  = 50;
+
+    private const float ActuatingBaseFreq = 50;
     private const float BeginActuatingFreq = 80;
-    private const float RetractedFreq      = 70;
-    private const float ExtendedFreq       = 35;
+    private const float RetractedFreq = 70;
+    private const float ExtendedFreq = 35;
 
     private Vector4 _distance;
     private Vector4 _actuatingAmplitudes;
-    private Volume  _beginActuatingVolume;
-    private Volume  _retractedVolume;
-    private Volume  _extendedVolume;
+    private Volume _beginActuatingVolume;
+    private Volume _retractedVolume;
+    private Volume _extendedVolume;
 
-    public LandingGear(ISampleProvider source, Audio audio) : base(source, audio)
+    public LandingGear(ISampleProvider source, Audio audio)
+        : base(source, audio)
     {
         _harmonicsGenerators.Add(new HarmonicsGenerator(2, 3, 4));
         _harmonicsGenerators.Add(new HarmonicsGenerator(2, 3, 4));
@@ -39,9 +40,9 @@ internal class LandingGear : Effect
 
     protected override void OnSettingsUpdated()
     {
-        _actuatingAmplitudes  = new Vector4(GetAmplitude(-12), GetAmplitude(-18), 0, 0);
-        _retractedVolume      = GetVolume(0);
-        _extendedVolume       = GetVolume(-5);
+        _actuatingAmplitudes = new Vector4(GetAmplitude(-12), GetAmplitude(-18), 0, 0);
+        _retractedVolume = GetVolume(0);
+        _extendedVolume = GetVolume(-5);
         _beginActuatingVolume = GetVolume(-6);
     }
 
@@ -83,8 +84,8 @@ internal class LandingGear : Effect
             // the landing gear positions can jump from 0 -> 1.
             // MinChangeForActuation is intended to prevent actuation when the aircraft is destroyed, it appears that
             // the values can change slightly each tick causing the effect to fire.
-            float diff      = Math.Abs(position - _previousPosition[i]);
-            bool  actuating = diff is > MinChangeForActuation and < MaxChangeForActuation;
+            float diff = Math.Abs(position - _previousPosition[i]);
+            bool actuating = diff is > MinChangeForActuation and < MaxChangeForActuation;
 
             bool wasActuating = _actuating[i];
 
@@ -113,9 +114,15 @@ internal class LandingGear : Effect
                     Logging.At(this).Debug("Landing gear {Index} fully extended", i);
                     // Play fully extended sound
                     float amp0 = Attenuate(ExtendedFreq, _extendedVolume.Amplitude, _distance[i]);
-                    float amp1 = Attenuate(ExtendedFreq * 1.5f, _extendedVolume.Amplitude, _distance[i]);
+                    float amp1 = Attenuate(
+                        ExtendedFreq * 1.5f,
+                        _extendedVolume.Amplitude,
+                        _distance[i]
+                    );
                     _impulseGenerators.Add(new ImpulseGenerator(ExtendedFreq, amp0, 5, 3));
-                    _impulseGenerators.Add(new ImpulseGenerator(ExtendedFreq * 1.5f, amp1, 7, 3, 0.15f));
+                    _impulseGenerators.Add(
+                        new ImpulseGenerator(ExtendedFreq * 1.5f, amp1, 7, 3, 0.15f)
+                    );
                 }
             }
             else if (actuating && !wasActuating)
@@ -124,14 +131,20 @@ internal class LandingGear : Effect
                 if (_previousPosition[i] is 0 or 1)
                 {
                     // Play start sound
-                    float amp = Attenuate(BeginActuatingFreq, _beginActuatingVolume.Amplitude, _distance[i]);
+                    float amp = Attenuate(
+                        BeginActuatingFreq,
+                        _beginActuatingVolume.Amplitude,
+                        _distance[i]
+                    );
                     _impulseGenerators.Add(new ImpulseGenerator(BeginActuatingFreq, amp, 8, 6));
-                    _impulseGenerators.Add(new ImpulseGenerator(BeginActuatingFreq, amp, 8, 6, 0.1f));
+                    _impulseGenerators.Add(
+                        new ImpulseGenerator(BeginActuatingFreq, amp, 8, 6, 0.1f)
+                    );
                 }
 
                 // Start the generator
                 var frequencies = _harmonics * ActuatingBaseFreq;
-                var amplitudes  = _actuatingAmplitudes;
+                var amplitudes = _actuatingAmplitudes;
                 amplitudes[0] = Attenuate(frequencies[0], amplitudes[0], _distance[i]);
                 amplitudes[1] = Attenuate(frequencies[1], amplitudes[1], _distance[i]);
                 amplitudes[2] = Attenuate(frequencies[2], amplitudes[2], _distance[i]);
@@ -139,7 +152,7 @@ internal class LandingGear : Effect
                 _harmonicsGenerators[i].SetTarget(ActuatingBaseFreq, _actuatingAmplitudes, 0.25f);
             }
 
-            _actuating[i]        = actuating;
+            _actuating[i] = actuating;
             _previousPosition[i] = position;
         }
     }

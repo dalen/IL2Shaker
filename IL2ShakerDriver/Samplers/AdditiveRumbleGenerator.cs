@@ -3,20 +3,25 @@
 internal class AdditiveRumbleGenerator : ISampleWriter
 {
     private readonly double _thetaIncrement;
-    private readonly float  _maxIntensity;
-    private readonly float  _intensityMultiplier;
-    private readonly float  _maxTime;
+    private readonly float _maxIntensity;
+    private readonly float _intensityMultiplier;
+    private readonly float _maxTime;
 
     private Volume _volume;
-    private int    _samplesRemaining;
-    private int    _sampleIndex;
+    private int _samplesRemaining;
+    private int _sampleIndex;
 
-    public AdditiveRumbleGenerator(float frequency, float maxIntensity, float intensityMultiplier, float maxTime)
+    public AdditiveRumbleGenerator(
+        float frequency,
+        float maxIntensity,
+        float intensityMultiplier,
+        float maxTime
+    )
     {
-        _thetaIncrement      = frequency * (Math.PI * 2) / SimClock.SampleRate;
-        _maxIntensity        = maxIntensity;
+        _thetaIncrement = frequency * (Math.PI * 2) / SimClock.SampleRate;
+        _maxIntensity = maxIntensity;
         _intensityMultiplier = intensityMultiplier;
-        _maxTime             = maxTime;
+        _maxTime = maxTime;
     }
 
     public void SetVolume(Volume volume)
@@ -28,8 +33,11 @@ internal class AdditiveRumbleGenerator : ISampleWriter
     public void AddToIntensity(float value)
     {
         float intensity = Math.Min(value, _maxIntensity);
-        _samplesRemaining = (int)Math.Min(_samplesRemaining + intensity * _intensityMultiplier,
-                                          SimClock.SampleRate * _maxTime);
+        _samplesRemaining = (int)
+            Math.Min(
+                _samplesRemaining + intensity * _intensityMultiplier,
+                SimClock.SampleRate * _maxTime
+            );
     }
 
     public void Write(float[] buffer, int offset, int count, SimTime simTime)
@@ -45,8 +53,8 @@ internal class AdditiveRumbleGenerator : ISampleWriter
             float value = buffer[i];
 
             float intensity = _samplesRemaining / (SimClock.SampleRate * _maxTime);
-            float amplitude = intensity         * _volume.Amplitude;
-            float theta     = (float)(_thetaIncrement * _sampleIndex);
+            float amplitude = intensity * _volume.Amplitude;
+            float theta = (float)(_thetaIncrement * _sampleIndex);
 
             value += amplitude * MathF.Sin(theta);
 

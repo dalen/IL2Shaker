@@ -9,16 +9,18 @@ namespace IL2TelemetryRelay;
 
 public static class Relay
 {
-    public static async IAsyncEnumerable<Event> Listen(string                                     ipAddress,
-                                                       int                                        port,
-                                                       [EnumeratorCancellation] CancellationToken token)
+    public static async IAsyncEnumerable<Event> Listen(
+        string ipAddress,
+        int port,
+        [EnumeratorCancellation] CancellationToken token
+    )
     {
-        UdpClient?  client     = null;
+        UdpClient? client = null;
         IPEndPoint? ipEndPoint = null;
         try
         {
             ipEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-            client     = new UdpClient(ipEndPoint);
+            client = new UdpClient(ipEndPoint);
         }
         catch (SocketException ex)
         {
@@ -36,8 +38,10 @@ public static class Relay
             yield break;
         }
 
-        Logging.At(typeof(Relay)).Information("Listening at {IP}:{Port}", ipEndPoint.Address, ipEndPoint.Port);
-        
+        Logging
+            .At(typeof(Relay))
+            .Information("Listening at {IP}:{Port}", ipEndPoint.Address, ipEndPoint.Port);
+
         while (!token.IsCancellationRequested)
         {
             UdpReceiveResult result;

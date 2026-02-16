@@ -2,6 +2,4 @@
 
 namespace IL2ShakerUI.ViewModels;
 
-internal class ViewModelBase : ReactiveObject
-{
-}
+internal class ViewModelBase : ReactiveObject { }

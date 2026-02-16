@@ -8,7 +8,7 @@ internal static class StateDecoder
     {
         // uint   packetID   = BitConverter.ToUInt32(packet, 0);
         ushort packetSize = BitConverter.ToUInt16(packet, 4);
-        uint   tick       = BitConverter.ToUInt32(packet, 6);
+        uint tick = BitConverter.ToUInt32(packet, 6);
 
         offset = 11;
         var state = new StateData(tick, packet, offset);
@@ -17,7 +17,7 @@ internal static class StateDecoder
 
         for (int i = 0; i < length; i++)
         {
-            var  stateType   = (StateType)BitConverter.ToUInt16(packet, offset);
+            var stateType = (StateType)BitConverter.ToUInt16(packet, offset);
             byte stateLength = packet[offset + 2];
             offset += 3;
 
@@ -34,7 +34,10 @@ internal static class StateDecoder
                 case StateType.IntakeManifoldPressurePa:
                     for (int j = 0; j < stateLength; j++)
                     {
-                        state.IntakeManifoldPressurePa[j] = BitConverter.ToSingle(packet, offset + j * 4);
+                        state.IntakeManifoldPressurePa[j] = BitConverter.ToSingle(
+                            packet,
+                            offset + j * 4
+                        );
                     }
 
                     break;
@@ -56,7 +59,10 @@ internal static class StateDecoder
                     state.LandingGearCount = stateLength;
                     for (int j = 0; j < stateLength; j++)
                     {
-                        state.LandingGearPosition[j] = BitConverter.ToSingle(packet, offset + j * 4);
+                        state.LandingGearPosition[j] = BitConverter.ToSingle(
+                            packet,
+                            offset + j * 4
+                        );
                     }
 
                     break;
@@ -65,7 +71,10 @@ internal static class StateDecoder
                     state.LandingGearCount = stateLength;
                     for (int j = 0; j < stateLength; j++)
                     {
-                        state.LandingGearPressure[j] = BitConverter.ToSingle(packet, offset + j * 4);
+                        state.LandingGearPressure[j] = BitConverter.ToSingle(
+                            packet,
+                            offset + j * 4
+                        );
                     }
 
                     break;
@@ -78,9 +87,11 @@ internal static class StateDecoder
                     break;
                 case StateType.Acceleration:
                     // Longitudinal, Vertical, Lateral
-                    state.Acceleration = new Vector3(BitConverter.ToSingle(packet, offset),
-                                                     BitConverter.ToSingle(packet, offset + 4),
-                                                     BitConverter.ToSingle(packet, offset + 8));
+                    state.Acceleration = new Vector3(
+                        BitConverter.ToSingle(packet, offset),
+                        BitConverter.ToSingle(packet, offset + 4),
+                        BitConverter.ToSingle(packet, offset + 8)
+                    );
                     break;
                 case StateType.StallBuffet:
                     state.StallBuffetFrequency = BitConverter.ToSingle(packet, offset);

@@ -6,15 +6,14 @@ namespace IL2ShakerDriver.Effects;
 
 internal class RollRate : Effect
 {
-    private const    float         TransitionTime = 0.025f;
-    private const    float         MinRollRate    = MathF.PI / 8f;
-    private const    float         MaxRollRate    = MathF.PI;
-    private const    float         Frequency      = 30;
+    private const float TransitionTime = 0.025f;
+    private const float MinRollRate = MathF.PI / 8f;
+    private const float MaxRollRate = MathF.PI;
+    private const float Frequency = 30;
     private readonly WaveGenerator _waveGenerator = new();
 
-    public RollRate(ISampleProvider source, Audio audio) : base(source, audio)
-    {
-    }
+    public RollRate(ISampleProvider source, Audio audio)
+        : base(source, audio) { }
 
     protected override void Write(float[] buffer, int offset, int count)
     {
@@ -26,9 +25,9 @@ internal class RollRate : Effect
 
     protected override void OnMotionDataReceived(MotionData motionData)
     {
-        float rollRate       = MathF.Max(MathF.Abs(motionData.SpinX) - MinRollRate, 0);
+        float rollRate = MathF.Max(MathF.Abs(motionData.SpinX) - MinRollRate, 0);
         float rollRateFactor = MathF.Min(rollRate / (MaxRollRate - MinRollRate), 1f);
-        float amplitude      = rollRateFactor * Volume.Amplitude;
+        float amplitude = rollRateFactor * Volume.Amplitude;
         _waveGenerator.SetTarget(Frequency, amplitude, TransitionTime);
     }
 }

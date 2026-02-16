@@ -3,5 +3,5 @@
 public interface IEffectSettings
 {
     bool Enabled { get; set; }
-    int  Value   { get; set; }
+    int Value { get; set; }
 }

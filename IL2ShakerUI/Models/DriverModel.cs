@@ -10,7 +10,7 @@ namespace IL2ShakerUI.Models;
 internal class DriverModel : IDisposable
 {
     internal readonly Settings Settings;
-    private readonly  Driver   _driver;
+    private readonly Driver _driver;
 
     public IEnumerable<string> GetOutputDevices()
     {
@@ -20,9 +20,11 @@ internal class DriverModel : IDisposable
     public DriverModel()
     {
         Logging.At(this).Information("Parsing settings...");
-        Settings                         = LoadSettings(@"\Settings.yaml");
-        Logging.LevelSwitch.MinimumLevel = Settings.DebugLogging ? LogEventLevel.Verbose : LogEventLevel.Information;
-        _driver                          = new Driver();
+        Settings = LoadSettings(@"\Settings.yaml");
+        Logging.LevelSwitch.MinimumLevel = Settings.DebugLogging
+            ? LogEventLevel.Verbose
+            : LogEventLevel.Information;
+        _driver = new Driver();
     }
 
     public void Dispose()
@@ -33,7 +35,9 @@ internal class DriverModel : IDisposable
     private static Settings LoadSettings(string filename)
     {
         using TextReader reader = new StreamReader(Directory.GetCurrentDirectory() + filename);
-        var deserializer = new DeserializerBuilder().WithTypeMapping<IEffectSettings, EffectSettings>().Build();
+        var deserializer = new DeserializerBuilder()
+            .WithTypeMapping<IEffectSettings, EffectSettings>()
+            .Build();
         return deserializer.Deserialize<Settings>(reader);
     }
 
@@ -66,8 +70,12 @@ internal class DriverModel : IDisposable
         try
         {
             Logging.At(this).Debug("Saving settings...");
-            using TextWriter writer = new StreamWriter(Directory.GetCurrentDirectory() + @"\Settings.yaml");
-            var serializer = new SerializerBuilder().WithTypeInspector(o => new WriteableTypeInspector(o)).Build();
+            using TextWriter writer = new StreamWriter(
+                Directory.GetCurrentDirectory() + @"\Settings.yaml"
+            );
+            var serializer = new SerializerBuilder()
+                .WithTypeInspector(o => new WriteableTypeInspector(o))
+                .Build();
             serializer.Serialize(writer, Settings);
         }
         catch
@@ -79,7 +87,7 @@ internal class DriverModel : IDisposable
     private static void CopySettings(Settings dst, Settings src)
     {
         dst.OutputDevice = src.OutputDevice;
-        dst.Latency      = src.Latency;
+        dst.Latency = src.Latency;
         CopyEffectSettings(dst.MasterVolume, src.MasterVolume);
         CopyEffectSettings(dst.Engine, src.Engine);
         CopyEffectSettings(dst.LandingGear, src.LandingGear);
@@ -98,6 +106,6 @@ internal class DriverModel : IDisposable
     private static void CopyEffectSettings(IEffectSettings dst, IEffectSettings src)
     {
         dst.Enabled = src.Enabled;
-        dst.Value   = src.Value;
+        dst.Value = src.Value;
     }
 }

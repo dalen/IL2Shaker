@@ -19,9 +19,9 @@ public class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var logModel     = new LogModel();
+            var logModel = new LogModel();
             var logViewModel = new LogViewModel(logModel);
-            var driverModel  = new DriverModel();
+            var driverModel = new DriverModel();
 
             desktop.ShutdownRequested += (_, _) =>
             {
@@ -34,7 +34,7 @@ public class App : Application
 
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(logViewModel, settingsViewModel)
+                DataContext = new MainWindowViewModel(logViewModel, settingsViewModel),
             };
         }
 

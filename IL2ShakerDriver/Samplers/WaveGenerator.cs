@@ -16,16 +16,21 @@ internal class WaveGenerator : ISampleWriter
 
     public void SetTarget(float freq, float amplitude, float transitionTime)
     {
-        _targetFrequency            = freq;
-        _targetAmplitude            = amplitude;
+        _targetFrequency = freq;
+        _targetAmplitude = amplitude;
         _transitionSamplesRemaining = (int)(transitionTime * SimClock.SampleRate);
-        _rateOfChangeFrequency      = (_targetFrequency - _currentFrequency) / _transitionSamplesRemaining;
-        _rateOfChangeAmplitude      = (_targetAmplitude - _currentAmplitude) / _transitionSamplesRemaining;
+        _rateOfChangeFrequency =
+            (_targetFrequency - _currentFrequency) / _transitionSamplesRemaining;
+        _rateOfChangeAmplitude =
+            (_targetAmplitude - _currentAmplitude) / _transitionSamplesRemaining;
     }
 
     public void Write(float[] buffer, int offset, int count, SimTime simTime)
     {
-        if ((_currentAmplitude == 0 && _targetAmplitude == 0) || (_currentFrequency == 0 && _targetFrequency == 0))
+        if (
+            (_currentAmplitude == 0 && _targetAmplitude == 0)
+            || (_currentFrequency == 0 && _targetFrequency == 0)
+        )
             return;
 
         double thetaIncrement = _currentFrequency * (Math.PI * 2) / SimClock.SampleRate;

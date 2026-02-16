@@ -11,7 +11,7 @@ public class ZeroingSampler : ISampleProvider
     public ZeroingSampler(ISampleProvider source)
     {
         WaveFormat = source.WaveFormat;
-        _source    = source;
+        _source = source;
     }
 
     public int Read(float[] buffer, int offset, int count)

@@ -11,20 +11,19 @@ internal class Bumps : Effect
 {
     private readonly List<ImpulseGenerator> _impulseGenerators = new();
 
-    private readonly bool[] _rising      = new bool[4];
-    private readonly int[]  _ticksRising = new int[4];
+    private readonly bool[] _rising = new bool[4];
+    private readonly int[] _ticksRising = new int[4];
 
     private Vector4 _prevPressures;
     private Vector4 _startPressure;
     private Vector4 _distance;
 
     private const float MaxRateOfChange = 0.4f;
-    private const float MinFreq         = 25;
-    private const float MaxFreq         = 40;
+    private const float MinFreq = 25;
+    private const float MaxFreq = 40;
 
-    public Bumps(ISampleProvider source, Audio audio) : base(source, audio)
-    {
-    }
+    public Bumps(ISampleProvider source, Audio audio)
+        : base(source, audio) { }
 
     protected override void Write(float[] buffer, int offset, int count)
     {
@@ -59,20 +58,20 @@ internal class Bumps : Effect
         for (int i = 0; i < 4; i++)
         {
             bool wasRising = _rising[i];
-            bool rising    = diff[i] > 0;
+            bool rising = diff[i] > 0;
             _rising[i] = rising;
 
             if (!rising && wasRising)
             {
                 float pressureChange = prev[i] - _startPressure[i];
-                float rateOfChange   = pressureChange / _ticksRising[i];
+                float rateOfChange = pressureChange / _ticksRising[i];
                 // Logging.At(this)
                 //    .Debug("Tick = {Tick}, Wheel = {i}, PressureChange = {Diff}, OverTicks = {Ticks}, RateOfChange = {Rate}",
                 //           stateData.Tick, i, pressureChange, _ticksRising[i], rateOfChange);
 
                 rateOfChange = Math.Min(MathF.Sqrt(rateOfChange), MaxRateOfChange);
                 float ratio = rateOfChange / MaxRateOfChange;
-                float amp1  = ratio        * Volume.Amplitude;
+                float amp1 = ratio * Volume.Amplitude;
 
                 float freq1 = MinFreq + (1 - ratio) * (MaxFreq - MinFreq);
 
@@ -80,7 +79,7 @@ internal class Bumps : Effect
 
                 _impulseGenerators.Add(new ImpulseGenerator(freq1, amp1, 5, 3));
 
-                _ticksRising[i]   = 0;
+                _ticksRising[i] = 0;
                 _startPressure[i] = 0;
             }
             else if (rising && !wasRising)

@@ -7,8 +7,8 @@ namespace IL2ShakerDriver;
 internal class Listener
 {
     public static event Action<MotionData>? MotionDataReceived;
-    public static event Action<StateData>?  StateDataReceived;
-    public static event Action<Event>?      EventDataReceived;
+    public static event Action<StateData>? StateDataReceived;
+    public static event Action<Event>? EventDataReceived;
 
     public static async void ListenToStream(CancellationToken token)
     {

@@ -10,9 +10,10 @@ internal class OrdnanceRelease : Effect
     private readonly List<ImpulseGenerator> _impulseGenerators = new();
 
     private const float MaxMass = 2500f;
-    private const float MinAmp  = 0.2f;
+    private const float MinAmp = 0.2f;
 
-    public OrdnanceRelease(ISampleProvider source, Audio audio) : base(source, audio)
+    public OrdnanceRelease(ISampleProvider source, Audio audio)
+        : base(source, audio)
     {
         // TODO STUB need to finish this.
     }
@@ -36,21 +37,32 @@ internal class OrdnanceRelease : Effect
         if (eventData is BombReleaseEvent bombReleaseEvent)
         {
             float freq = 0;
-            float amp  = 0;
+            float amp = 0;
             float dist = bombReleaseEvent.Offset.Length();
 
-            Logging.At(this).Debug("Tick = {Tick}, Bomb Mass = {Mass}", bombReleaseEvent.Tick, bombReleaseEvent.Mass);
+            Logging
+                .At(this)
+                .Debug(
+                    "Tick = {Tick}, Bomb Mass = {Mass}",
+                    bombReleaseEvent.Tick,
+                    bombReleaseEvent.Mass
+                );
 
             amp = Attenuate(freq, amp, dist);
         }
         else if (eventData is RocketLaunchEvent rocketLaunchEvent)
         {
             float freq = 0;
-            float amp  = 0;
+            float amp = 0;
             float dist = rocketLaunchEvent.Offset.Length();
 
-            Logging.At(this).Debug("Tick = {Tick}, Rocket Mass = {Mass}", rocketLaunchEvent.Tick,
-                                   rocketLaunchEvent.Mass);
+            Logging
+                .At(this)
+                .Debug(
+                    "Tick = {Tick}, Rocket Mass = {Mass}",
+                    rocketLaunchEvent.Tick,
+                    rocketLaunchEvent.Mass
+                );
 
             amp = Attenuate(freq, amp, dist);
         }

@@ -5,25 +5,27 @@ internal class TimedImpulseGenerator : ISampleWriter
     public bool Complete { get; private set; }
 
     private readonly SimTime _start;
-    private readonly float   _amplitude;
-    private readonly int     _releaseSamples;
-    private readonly double  _thetaIncrement;
+    private readonly float _amplitude;
+    private readonly int _releaseSamples;
+    private readonly double _thetaIncrement;
 
     private int _sampleIndex;
     private int _samplesRemaining;
 
-    public TimedImpulseGenerator(SimTime start,
-                                 float   frequency,
-                                 float   amplitude,
-                                 int     cycles,
-                                 int     releaseStartCycle)
+    public TimedImpulseGenerator(
+        SimTime start,
+        float frequency,
+        float amplitude,
+        int cycles,
+        int releaseStartCycle
+    )
     {
-        _start     = start;
+        _start = start;
         _amplitude = amplitude;
-        float samplesPerCycle = SimClock.SampleRate            / frequency;
-        _releaseSamples   = (int)((cycles - releaseStartCycle) * samplesPerCycle);
-        _thetaIncrement   = frequency * (Math.PI * 2) / SimClock.SampleRate;
-        _sampleIndex      = 0;
+        float samplesPerCycle = SimClock.SampleRate / frequency;
+        _releaseSamples = (int)((cycles - releaseStartCycle) * samplesPerCycle);
+        _thetaIncrement = frequency * (Math.PI * 2) / SimClock.SampleRate;
+        _sampleIndex = 0;
         _samplesRemaining = (int)(cycles * samplesPerCycle);
     }
 
@@ -31,13 +33,14 @@ internal class TimedImpulseGenerator : ISampleWriter
     {
         int timeOffset = (int)(_start.AbsoluteTime - simTime.AbsoluteTime);
         int writeStart = Math.Max(0, timeOffset);
-        int writeEnd   = Math.Min(count, writeStart + _samplesRemaining);
+        int writeEnd = Math.Min(count, writeStart + _samplesRemaining);
 
         for (int i = writeStart; i < writeEnd; i++)
         {
-            float value     = buffer[i];
-            float amplitude = Math.Min(_samplesRemaining / (float)_releaseSamples, 1.0f) * _amplitude;
-            float theta     = (float)(_thetaIncrement * _sampleIndex);
+            float value = buffer[i];
+            float amplitude =
+                Math.Min(_samplesRemaining / (float)_releaseSamples, 1.0f) * _amplitude;
+            float theta = (float)(_thetaIncrement * _sampleIndex);
             value += amplitude * MathF.Sin(theta);
 
             buffer[i] = value;

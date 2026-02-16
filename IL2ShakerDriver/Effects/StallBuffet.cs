@@ -6,16 +6,15 @@ namespace IL2ShakerDriver.Effects;
 
 internal class StallBuffet : Effect
 {
-    private const    float         FrequencyMultiplier = 4f;
-    private const    float         AmplitudeMultiplier = 3.5f;
-    private const    float         TransitionTime      = 0.05f;
-    private readonly WaveGenerator _waveGenerator      = new();
+    private const float FrequencyMultiplier = 4f;
+    private const float AmplitudeMultiplier = 3.5f;
+    private const float TransitionTime = 0.05f;
+    private readonly WaveGenerator _waveGenerator = new();
 
     private float _maxAmp;
 
-    public StallBuffet(ISampleProvider source, Audio audio) : base(source, audio)
-    {
-    }
+    public StallBuffet(ISampleProvider source, Audio audio)
+        : base(source, audio) { }
 
     protected override void Write(float[] buffer, int offset, int count)
     {
@@ -28,7 +27,7 @@ internal class StallBuffet : Effect
     protected override void OnStateDataReceived(StateData stateData)
     {
         float nextFreq = stateData.StallBuffetFrequency * FrequencyMultiplier;
-        float nextAmp  = stateData.StallBuffetAmplitude * AmplitudeMultiplier;
+        float nextAmp = stateData.StallBuffetAmplitude * AmplitudeMultiplier;
 
         if (stateData.StallBuffetAmplitude > _maxAmp)
         {
@@ -39,8 +38,12 @@ internal class StallBuffet : Effect
 
         if (nextAmp > 1)
         {
-            Logging.At(this).Debug("Stall buffet amplitude greater than 1, capping - suggested multiplier {MaxAmp}",
-                                   1 / _maxAmp);
+            Logging
+                .At(this)
+                .Debug(
+                    "Stall buffet amplitude greater than 1, capping - suggested multiplier {MaxAmp}",
+                    1 / _maxAmp
+                );
             nextAmp = 1;
         }
 

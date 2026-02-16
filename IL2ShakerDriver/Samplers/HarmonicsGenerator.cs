@@ -21,28 +21,41 @@ internal class HarmonicsGenerator : ISampleWriter
     public HarmonicsGenerator(int harmonic1, int harmonic2, int harmonic3)
     {
         if (harmonic1 <= 1)
-            throw new ArgumentOutOfRangeException(nameof(harmonic1), "Harmonic multiples must be greater than 1");
+            throw new ArgumentOutOfRangeException(
+                nameof(harmonic1),
+                "Harmonic multiples must be greater than 1"
+            );
         if (harmonic2 <= 1)
-            throw new ArgumentOutOfRangeException(nameof(harmonic2), "Harmonic multiples must be greater than 1");
+            throw new ArgumentOutOfRangeException(
+                nameof(harmonic2),
+                "Harmonic multiples must be greater than 1"
+            );
         if (harmonic3 <= 1)
-            throw new ArgumentOutOfRangeException(nameof(harmonic3), "Harmonic multiples must be greater than 1");
+            throw new ArgumentOutOfRangeException(
+                nameof(harmonic3),
+                "Harmonic multiples must be greater than 1"
+            );
 
         _harmonics = new Vector4(1f, harmonic1, harmonic2, harmonic3);
     }
 
     public void SetTarget(float fundamentalFreq, Vector4 amplitudes, float transitionTime)
     {
-        _targetFrequency            = fundamentalFreq;
-        _targetAmplitudes           = amplitudes;
+        _targetFrequency = fundamentalFreq;
+        _targetAmplitudes = amplitudes;
         _transitionSamplesRemaining = (int)(transitionTime * SimClock.SampleRate);
-        _rateOfChangeFrequency      = (_targetFrequency  - _currentFrequency)  / _transitionSamplesRemaining;
-        _rateOfChangeAmplitudes     = (_targetAmplitudes - _currentAmplitudes) / _transitionSamplesRemaining;
+        _rateOfChangeFrequency =
+            (_targetFrequency - _currentFrequency) / _transitionSamplesRemaining;
+        _rateOfChangeAmplitudes =
+            (_targetAmplitudes - _currentAmplitudes) / _transitionSamplesRemaining;
     }
 
     public void Write(float[] buffer, int offset, int count, SimTime simTime)
     {
-        if ((_targetAmplitudes == Vector4.Zero && _currentAmplitudes == Vector4.Zero)
-         || (_targetFrequency  == 0            && _currentFrequency  == 0))
+        if (
+            (_targetAmplitudes == Vector4.Zero && _currentAmplitudes == Vector4.Zero)
+            || (_targetFrequency == 0 && _currentFrequency == 0)
+        )
             return;
 
         double thetaIncrement = _currentFrequency * (Math.PI * 2) / SimClock.SampleRate;
@@ -68,12 +81,12 @@ internal class HarmonicsGenerator : ISampleWriter
 
             if (_transitionSamplesRemaining == 0)
             {
-                _currentFrequency  = _targetFrequency;
+                _currentFrequency = _targetFrequency;
                 _currentAmplitudes = _targetAmplitudes;
             }
             else
             {
-                _currentFrequency  += _rateOfChangeFrequency;
+                _currentFrequency += _rateOfChangeFrequency;
                 _currentAmplitudes += _rateOfChangeAmplitudes;
             }
 

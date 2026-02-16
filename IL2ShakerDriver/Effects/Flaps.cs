@@ -8,16 +8,15 @@ namespace IL2ShakerDriver.Effects;
 internal class Flaps : Effect
 {
     private readonly HarmonicsGenerator _harmonicsGenerator = new(2, 3, 4);
-    private          float              _previousPosition;
-    private          bool               _actuating;
+    private float _previousPosition;
+    private bool _actuating;
 
     private const float ActuatingBaseFreq = 28;
 
     private Vector4 _actuatingAmplitudes;
 
-    public Flaps(ISampleProvider source, Audio audio) : base(source, audio)
-    {
-    }
+    public Flaps(ISampleProvider source, Audio audio)
+        : base(source, audio) { }
 
     protected override void OnSettingsUpdated()
     {
@@ -36,8 +35,8 @@ internal class Flaps : Effect
     {
         float position = stateData.FlapsPosition;
         // It's only actuating if it has slightly moved since the previous packet
-        float diff      = Math.Abs(position - _previousPosition);
-        bool  actuating = diff is not 0 and < 0.25f;
+        float diff = Math.Abs(position - _previousPosition);
+        bool actuating = diff is not 0 and < 0.25f;
 
         bool wasActuating = _actuating;
 
@@ -58,7 +57,7 @@ internal class Flaps : Effect
             _harmonicsGenerator.SetTarget(ActuatingBaseFreq, _actuatingAmplitudes, 0.25f);
         }
 
-        _actuating        = actuating;
+        _actuating = actuating;
         _previousPosition = position;
     }
 }

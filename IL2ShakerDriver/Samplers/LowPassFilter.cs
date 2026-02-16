@@ -7,10 +7,10 @@ internal class LowPassFilter : ISampleProvider
 {
     public WaveFormat WaveFormat { get; }
 
-    private          bool         _enabled;
-    private          float        _cuttOffFreq;
-    private readonly int          _order;
-    private          OnlineFilter _filter;
+    private bool _enabled;
+    private float _cuttOffFreq;
+    private readonly int _order;
+    private OnlineFilter _filter;
 
     private readonly ISampleProvider _source;
 
@@ -20,7 +20,12 @@ internal class LowPassFilter : ISampleProvider
         _cuttOffFreq = cutOffFreq;
         _order = order;
         _source = source;
-        _filter = OnlineFilter.CreateLowpass(ImpulseResponse.Finite, source.WaveFormat.SampleRate, cutOffFreq, order);
+        _filter = OnlineFilter.CreateLowpass(
+            ImpulseResponse.Finite,
+            source.WaveFormat.SampleRate,
+            cutOffFreq,
+            order
+        );
     }
 
     public void UpdateSettings(IEffectSettings settings)
@@ -31,9 +36,16 @@ internal class LowPassFilter : ISampleProvider
         if (_cuttOffFreq == settings.Value && !switchedState)
             return;
 
-        Logging.At(this).Verbose("{State}: {Hz}Hz", _enabled ? "Enabled" : "Disabled", settings.Value);
+        Logging
+            .At(this)
+            .Verbose("{State}: {Hz}Hz", _enabled ? "Enabled" : "Disabled", settings.Value);
         _cuttOffFreq = settings.Value;
-        _filter      = OnlineFilter.CreateLowpass(ImpulseResponse.Finite, WaveFormat.SampleRate, _cuttOffFreq, _order);
+        _filter = OnlineFilter.CreateLowpass(
+            ImpulseResponse.Finite,
+            WaveFormat.SampleRate,
+            _cuttOffFreq,
+            _order
+        );
     }
 
     public int Read(float[] buffer, int offset, int count)
