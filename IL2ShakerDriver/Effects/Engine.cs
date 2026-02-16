@@ -58,7 +58,9 @@ internal class Engine : Effect
             OnSettingsUpdated();
         }
         else if (eventData is EngineDataEvent engineDataEvent)
+        {
             _distance[engineDataEvent.Index] = engineDataEvent.Offset.Length();
+        }
     }
 
     protected override void OnStateDataReceived(StateData stateData)
