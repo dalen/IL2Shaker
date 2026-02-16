@@ -23,11 +23,11 @@ internal static class StateDecoder
 
             switch (stateType)
             {
-                case StateType.RPM:
+                case StateType.EngineRPM:
                     state.EngineCount = stateLength;
                     for (int j = 0; j < state.EngineCount; j++)
                     {
-                        state.RPM[j] = BitConverter.ToSingle(packet, offset + j * 4);
+                        state.EngineRPM[j] = BitConverter.ToSingle(packet, offset + j * 4);
                     }
 
                     break;
@@ -41,18 +41,26 @@ internal static class StateDecoder
                     }
 
                     break;
-                case StateType.Val2:
-                    // Seems to range between 7-15 with the engine running, around 12-13 normally. Not sure?
-                    // Def not prop pitch
+                case StateType.EngineShakeFrequency:
+                    // Seems to range between 7-15 with the engine running, around 12-13 normally.
                     for (int j = 0; j < stateLength; j++)
                     {
-                        state.Val2[j] = BitConverter.ToSingle(packet, offset + j * 4);
+                        state.EngineShakeFrequency[j] = BitConverter.ToSingle(
+                            packet,
+                            offset + j * 4
+                        );
                     }
 
                     break;
-                case StateType.Val3:
-                    // Sits around 0.007 normally, doubles when pitching up, 0 with engine off. Dunno.
-                    state.Val3 = BitConverter.ToSingle(packet, offset);
+                case StateType.EngineShakeAmplitude:
+                    // Sits around 0.007 normally, doubles when pitching up, 0 with engine off.
+                    for (int j = 0; j < stateLength; j++)
+                    {
+                        state.EngineShakeAmplitude[j] = BitConverter.ToSingle(
+                            packet,
+                            offset + j * 4
+                        );
+                    }
                     break;
                 case StateType.LandingGearPosition:
                     // 0 is retracted, 1 is fully deployed
@@ -78,12 +86,12 @@ internal static class StateDecoder
                     }
 
                     break;
-                case StateType.IndicatedAirspeedMetresSecond:
-                    state.IndicatedAirSpeedMetresSecond = BitConverter.ToSingle(packet, offset);
+                case StateType.EquivalentAirSpeed:
+                    state.EquivalentAirSpeed = BitConverter.ToSingle(packet, offset);
                     break;
-                case StateType.Val7:
+                case StateType.AngleOfAttack:
                     // +- forces? ranges up to about 0.35. Seems to be somewhat related to G Forces
-                    state.Val7 = BitConverter.ToSingle(packet, offset);
+                    state.AngleOfAttack = BitConverter.ToSingle(packet, offset);
                     break;
                 case StateType.Acceleration:
                     // Longitudinal, Vertical, Lateral

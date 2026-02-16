@@ -2,14 +2,14 @@
 
 internal enum StateType : ushort
 {
-    RPM = 0,
+    EngineRPM = 0,
     IntakeManifoldPressurePa = 1,
-    Val2 = 2,
-    Val3 = 3,
+    EngineShakeFrequency = 2,
+    EngineShakeAmplitude = 3,
     LandingGearPosition = 4,
     LandingGearPressure = 5,
-    IndicatedAirspeedMetresSecond = 6,
-    Val7 = 7,
+    EquivalentAirSpeed = 6,
+    AngleOfAttack = 7,
     Acceleration = 8,
     StallBuffet = 9,
     AboveGroundLevelMetres = 10,

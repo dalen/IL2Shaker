@@ -66,7 +66,7 @@ internal class Engine : Effect
         for (int i = 0; i < _engines.Count; i++)
         {
             // TODO Include engine power? Need to figure out how to calculate it
-            float fundamentalFreq = stateData.RPM[i] / 120;
+            float fundamentalFreq = stateData.EngineRPM[i] / 120;
             var frequencies = _harmonics * fundamentalFreq;
             var amplitudes = _amplitudes;
             amplitudes[0] = Attenuate(frequencies[0], amplitudes[0], _distance[i]);

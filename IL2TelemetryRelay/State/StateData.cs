@@ -5,14 +5,14 @@ namespace IL2TelemetryRelay.State;
 public record StateData : Event
 {
     public int EngineCount;
-    public Vector4 RPM;
+    public Vector4 EngineRPM;
     public Vector4 IntakeManifoldPressurePa;
 
     public int LandingGearCount;
     public Vector4 LandingGearPosition;
     public Vector4 LandingGearPressure;
 
-    public float IndicatedAirSpeedMetresSecond;
+    public float EquivalentAirSpeed;
 
     // Longitudinal, Vertical, Lateral
     public Vector3 Acceleration;
@@ -25,9 +25,16 @@ public record StateData : Event
     public float FlapsPosition;
     public float AirBrakePosition;
 
-    public Vector4 Val2;
-    public float Val3;
-    public float Val7;
+    /// <summary>
+    /// Frequency in Hz
+    /// </summary>
+    public Vector4 EngineShakeFrequency;
+    public Vector4 EngineShakeAmplitude;
+
+    /// <summary>
+    /// In radians
+    /// </summary>
+    public float AngleOfAttack;
 
     public bool Paused;
 
